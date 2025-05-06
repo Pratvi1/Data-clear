@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyData Control Hub</title>
+  <link href="pbl.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body onload="checkLogin()">
+  <header>
+    <h1>MyData Control Hub</h1>
+    <div class="user-info" id="user-info">Guest</div>
+  </header>
+
+  <nav>
+    <a href="#" onclick="showSection('login')" id="link-login">Login</a>
+    <a href="#" onclick="showSection('signup')" id="link-signup">Signup</a>
+    <a href="#" onclick="showSection('dashboard')" id="link-dashboard" style="display: none;">Dashboard</a>
+    <a href="#" onclick="showSection('companies')" id="link-companies" style="display: none;">Connected Companies</a>
+    <a href="#" onclick="showSection('account')" id="link-account" style="display: none;">Account Dashboard</a>
+  </nav>
+
+  <section id="login" class="active">
+    <h2>Login</h2>
+    <form onsubmit="return handleLogin(event)">
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+      <div class="switch-link" onclick="showSection('signup')">Don't have an account? Signup</div>
+    </form>
+  </section>
+
+  <section id="signup">
+    <h2>Signup</h2>
+    <form onsubmit="return handleSignup(event)">
+      <input type="email" id="signupEmail" placeholder="Email" required />
+      <input type="password" id="signupPassword" placeholder="Password" required />
+      <button type="submit">Signup</button>
+      <div class="switch-link" onclick="showSection('login')">Already have an account? Login</div>
+    </form>
+  </section>
+
+  <section id="dashboard">
+    <h2>Dashboard</h2>
+    <div class="dashboard-grid">
+      <div class="dashboard-card">
+        <h3>Data Usage Overview</h3>
+        <canvas id="dataUsageChart"></canvas>
+      </div>
+      <div class="dashboard-card">
+        <h3>Company Data Distribution</h3>
+        <canvas id="companyDataChart"></canvas>
+      </div>
+      <div class="dashboard-card">
+        <h3>Recent Activity</h3>
+        <div class="activity-list">
+          <div class="activity-item">
+            <span class="activity-time">2 hours ago</span>
+            <span class="activity-text">Data access request from Fakebook</span>
+          </div>
+          <div class="activity-item">
+            <span class="activity-time">5 hours ago</span>
+            <span class="activity-text">New data collection from Goggle Search</span>
+          </div>
+          <div class="activity-item">
+            <span class="activity-time">1 day ago</span>
+            <span class="activity-text">Profile update completed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="companies">
+    <h2>Connected Companies</h2>
+    <div class="companies-grid">
+      <div class="card" id="fakebook">
+        <div class="company-header">
+          <h3>Fakebook</h3>
+          <div class="data-score">Data Score: 78%</div>
+        </div>
+        <div class="data-visualization">
+          <canvas id="fakebookChart"></canvas>
+        </div>
+        <p>Data collected: Name, Photos, Location, Friends List</p>
+        <div class="permissions">
+          <label><span>Allow Location Access</span><input type="checkbox" /></label>
+          <label><span>Allow Photo Access</span><input type="checkbox" /></label>
+        </div>
+        <div class="data-stats">
+          <div class="stat-item">
+            <span class="stat-label">Data Points</span>
+            <span class="stat-value">1,234</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Last Updated</span>
+            <span class="stat-value">2 days ago</span>
+          </div>
+        </div>
+        <button onclick="requestDeletion('Fakebook')">Request Data Deletion</button>
+      </div>
+      <div class="card" id="goggle">
+        <div class="company-header">
+          <h3>Goggle Search</h3>
+          <div class="data-score">Data Score: 65%</div>
+        </div>
+        <div class="data-visualization">
+          <canvas id="goggleChart"></canvas>
+        </div>
+        <p>Data collected: Search History, Location, Ad Preferences</p>
+        <div class="permissions">
+          <label><span>Allow Search Tracking</span><input type="checkbox" /></label>
+          <label><span>Allow Ad Personalization</span><input type="checkbox" /></label>
+        </div>
+        <div class="data-stats">
+          <div class="stat-item">
+            <span class="stat-label">Data Points</span>
+            <span class="stat-value">856</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Last Updated</span>
+            <span class="stat-value">5 hours ago</span>
+          </div>
+        </div>
+        <button onclick="requestDeletion('Goggle Search')">Request Data Deletion</button>
+      </div>
+      <div class="card" id="shopazon">
+        <div class="company-header">
+          <h3>Shopazon</h3>
+          <div class="data-score">Data Score: 92%</div>
+        </div>
+        <div class="data-visualization">
+          <canvas id="shopazonChart"></canvas>
+        </div>
+        <p>Data collected: Purchase History, Payment Info, Reviews</p>
+        <div class="permissions">
+          <label><span>Allow Purchase Tracking</span><input type="checkbox" /></label>
+          <label><span>Allow Review Sharing</span><input type="checkbox" /></label>
+        </div>
+        <div class="data-stats">
+          <div class="stat-item">
+            <span class="stat-label">Data Points</span>
+            <span class="stat-value">2,345</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Last Updated</span>
+            <span class="stat-value">1 day ago</span>
+          </div>
+        </div>
+        <button onclick="requestDeletion('Shopazon')">Request Data Deletion</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="account">
+    <h2>Account Dashboard</h2>
+    <div class="account-container">
+      <div class="account-card">
+        <h3>Profile Information</h3>
+        <form id="profileForm" onsubmit="return updateProfile(event)">
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" placeholder="Enter your full name" />
+          </div>
+          <div class="form-group">
+            <label for="currentEmail">Email</label>
+            <input type="email" id="currentEmail" placeholder="Enter your email" readonly />
+          </div>
+          <div class="form-group">
+            <label for="newPassword">New Password</label>
+            <input type="password" id="newPassword" placeholder="Enter new password" />
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" placeholder="Confirm new password" />
+          </div>
+          <button type="submit">Update Profile</button>
+        </form>
+      </div>
+      <div class="account-card">
+        <h3>Privacy Settings</h3>
+        <div class="privacy-settings">
+          <label>
+            <input type="checkbox" id="emailNotifications" />
+            <span>Email Notifications</span>
+          </label>
+          <label>
+            <input type="checkbox" id="dataCollection" />
+            <span>Allow Data Collection</span>
+          </label>
+          <label>
+            <input type="checkbox" id="thirdPartySharing" />
+            <span>Allow Third-Party Data Sharing</span>
+          </label>
+        </div>
+      </div>
+      <div class="account-card">
+        <h3>Account Activity</h3>
+        <div class="activity-timeline">
+          <div class="timeline-item">
+            <span class="timeline-date">Last Login</span>
+            <span class="timeline-info">2 hours ago</span>
+          </div>
+          <div class="timeline-item">
+            <span class="timeline-date">Password Changed</span>
+            <span class="timeline-info">1 week ago</span>
+          </div>
+          <div class="timeline-item">
+            <span class="timeline-date">Profile Updated</span>
+            <span class="timeline-info">2 weeks ago</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="pbl.js"></script>
+</body>
+</html>
